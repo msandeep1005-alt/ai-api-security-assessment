@@ -52,19 +52,19 @@ jobs:
           test -d backend/app/validation
           test -d backend/app/reporting
 
-      - name: Verify secret files are excluded
+            - name: Verify secret files are excluded
         run: |
           if git ls-files .env | grep -q .; then
             echo "ERROR: .env is tracked"
             exit 1
           fi
 
-          if git grep -n -i "AIza" -- . ':!README.md'; then
+          if git grep -n -i "AIza" -- ':!README.md' ':(exclude).github/**'; then
             echo "ERROR: Possible Gemini API key found"
             exit 1
           fi
 
-          if git grep -n -i "Bearer ey" -- . ':!README.md'; then
+          if git grep -n -i "Bearer ey" -- ':!README.md' ':(exclude).github/**'; then
             echo "ERROR: Possible bearer token found"
             exit 1
           fi
