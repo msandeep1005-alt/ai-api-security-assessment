@@ -3,7 +3,7 @@ from backend.app.ai.generator import generate_test_plan
 from backend.app.discovery.parser import load_and_discover
 
 
-SPEC = r"C:\seconize-assignment\crAPI\openapi-spec\crapi-openapi-spec.json"
+SPEC = r".\examples\crapi\crapi-openapi-spec.json"
 
 
 specification, endpoints = load_and_discover(SPEC)

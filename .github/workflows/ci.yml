@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  build-and-test:
+  build-and-verify:
     runs-on: ubuntu-latest
 
     steps:
@@ -40,6 +40,33 @@ jobs:
           python -m py_compile test_ai_pipeline.py
           python -m py_compile test_dispatcher.py
 
-      - name: Run dispatcher verification
+      - name: Verify repository structure
         run: |
-          python test_dispatcher.py
+          test -f examples/crapi/crapi-openapi-spec.json
+          test -f run_ai_assessment.py
+          test -f run_assessment.py
+          test -f test_ai_pipeline.py
+          test -f test_dispatcher.py
+          test -d backend/app/ai
+          test -d backend/app/scanner
+          test -d backend/app/validation
+          test -d backend/app/reporting
+
+      - name: Verify secret files are excluded
+        run: |
+          if git ls-files .env | grep -q .; then
+            echo "ERROR: .env is tracked"
+            exit 1
+          fi
+
+          if git grep -n -i "AIza" -- . ':!README.md'; then
+            echo "ERROR: Possible Gemini API key found"
+            exit 1
+          fi
+
+          if git grep -n -i "Bearer ey" -- . ':!README.md'; then
+            echo "ERROR: Possible bearer token found"
+            exit 1
+          fi
+
+          echo "Secret exposure checks passed."
