@@ -52,7 +52,7 @@ jobs:
           test -d backend/app/validation
           test -d backend/app/reporting
 
-            - name: Verify secret files are excluded
+                 - name: Verify secret files are excluded
         run: |
           if git ls-files .env | grep -q .; then
             echo "ERROR: .env is tracked"
