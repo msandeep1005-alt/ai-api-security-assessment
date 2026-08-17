@@ -1,16 +1,15 @@
 .venv/
 __pycache__/
-*.pyc
-*.pyo
-.env
-.pytest_cache/
-.vscode/
-.idea/
+*.py[cod]
 
-reports/*
-evidence/*
-!reports/.gitkeep
-!evidence/.gitkeep
+.env
+.env.*
+!.env.example
 
 *.log
-.DS_Store
+
+evidence/*
+!evidence/.gitkeep
+
+reports/*
+!reports/.gitkeep
