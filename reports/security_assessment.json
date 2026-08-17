@@ -1,0 +1,203 @@
+{
+  "report_metadata": {
+    "title": "AI-Assisted API Security Assessment",
+    "generated_at": "2026-08-17T03:59:32Z",
+    "target": "http://localhost:8888"
+  },
+  "executive_summary": {
+    "total_tests_with_findings": 2,
+    "total_findings": 2,
+    "severity_counts": {
+      "CRITICAL": 0,
+      "HIGH": 1,
+      "MEDIUM": 1,
+      "LOW": 0,
+      "INFO": 0
+    },
+    "overall_status": "VULNERABILITIES IDENTIFIED"
+  },
+  "findings": [
+    {
+      "finding_id": "FINDING-001",
+      "test_id": "BOLA-001",
+      "category": "BOLA",
+      "title": "Broken Object Level Authorization",
+      "severity": "HIGH",
+      "endpoint": "/identity/api/v2/vehicle/{vehicleId}/location",
+      "method": "GET",
+      "description": "An authenticated user was able to access a vehicle object belonging to another authorization context.",
+      "impact": "An attacker can access another user's vehicle data, including vehicle location and associated user information.",
+      "remediation": "Enforce server-side object-level authorization on the vehicle endpoint. The API must verify that the authenticated user owns or is explicitly authorized to access the requested vehicle before returning its data.",
+      "confirmed": true,
+      "evidence": {
+        "victim": {
+          "identity": "adam007@example.com",
+          "method": "GET",
+          "url": "http://localhost:8888/identity/api/v2/vehicle/f89b5f21-7829-45cb-a650-299a61090378/location",
+          "status_code": 200,
+          "response_body": "{\"carId\":\"f89b5f21-7829-45cb-a650-299a61090378\",\"vehicleLocation\":{\"id\":1,\"latitude\":\"32.778889\",\"longitude\":\"-91.919243\"},\"fullName\":\"Adam\",\"email\":\"adam007@example.com\"}",
+          "response_time_ms": 2081.6240000000003
+        },
+        "attacker": {
+          "identity": "test@example.com",
+          "method": "GET",
+          "url": "http://localhost:8888/identity/api/v2/vehicle/f89b5f21-7829-45cb-a650-299a61090378/location",
+          "status_code": 200,
+          "response_body": "{\"carId\":\"f89b5f21-7829-45cb-a650-299a61090378\",\"vehicleLocation\":{\"id\":1,\"latitude\":\"32.778889\",\"longitude\":\"-91.919243\"},\"fullName\":\"Adam\",\"email\":\"adam007@example.com\"}",
+          "response_time_ms": 2034.3770000000002
+        },
+        "validation": {
+          "confirmed": true,
+          "severity": "HIGH",
+          "title": "Broken Object Level Authorization"
+        }
+      }
+    },
+    {
+      "finding_id": "FINDING-002",
+      "test_id": "RATE-001",
+      "category": "RATE_LIMITING",
+      "title": "No Effective Rate Limiting Observed",
+      "severity": "MEDIUM",
+      "endpoint": "/identity/api/v2/user/dashboard",
+      "method": "GET",
+      "description": "The authenticated endpoint accepted repeated requests without returning HTTP 429 throttling responses during the assessment.",
+      "impact": "Insufficient request throttling may allow an attacker to consume excessive application resources or repeatedly invoke an API operation without an effective server-side request limit.",
+      "remediation": "Implement server-side rate limiting appropriate to the endpoint and threat model. Apply limits using authenticated identity and, where appropriate, IP address and endpoint-specific controls. Return HTTP 429 when the configured threshold is exceeded.",
+      "confirmed": true,
+      "evidence": {
+        "total_requests": 20,
+        "successful_requests": 20,
+        "throttled_requests": 0,
+        "requests": [
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2088.368
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2105.517
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2098.703
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2095.8250000000003
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2102.348
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2087.0660000000003
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2084.591
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2072.174
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2092.422
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2090.944
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2069.049
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2049.908
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2075.866
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2092.8689999999997
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2093.4469999999997
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2098.0029999999997
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2091.087
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2089.622
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2087.9660000000003
+          },
+          {
+            "method": "GET",
+            "url": "http://localhost:8888/identity/api/v2/user/dashboard",
+            "status_code": 200,
+            "response_time_ms": 2093.212
+          }
+        ],
+        "validation": {
+          "confirmed": true,
+          "severity": "MEDIUM",
+          "title": "No Effective Rate Limiting Observed",
+          "explanation": "20 consecutive authenticated requests were accepted without an HTTP 429 response. No effective request throttling was observed during this test."
+        }
+      }
+    }
+  ]
+}

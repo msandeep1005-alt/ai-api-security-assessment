@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>AI-Assisted API Security Assessment</title>
+
+<style>
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    background: #f5f7fa;
+    color: #1f2937;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px;
+}
+
+header {
+    background: #111827;
+    color: white;
+    padding: 35px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+h1 {
+    margin-top: 0;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.finding {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin-top: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #d1d5db;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    width: 200px;
+    background: #f3f4f6;
+}
+
+pre {
+    background: #111827;
+    color: #e5e7eb;
+    padding: 18px;
+    overflow-x: auto;
+    border-radius: 6px;
+}
+
+.status {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+    <h1>AI-Assisted API Security Assessment</h1>
+    <p>Target: http://localhost:8888</p>
+    <p>Generated: 2026-08-17T04:58:19Z</p>
+</header>
+
+<div class="card">
+
+<h2>Executive Summary</h2>
+
+<p class="status">
+VULNERABILITIES IDENTIFIED
+</p>
+
+<table>
+
+<tr>
+    <th>Total Findings</th>
+    <td>4</td>
+</tr>
+
+<tr>
+    <th>Confirmed Findings</th>
+    <td>2</td>
+</tr>
+
+<tr>
+    <th>Critical</th>
+    <td>0</td>
+</tr>
+
+<tr>
+    <th>High</th>
+    <td>1</td>
+</tr>
+
+<tr>
+    <th>Medium</th>
+    <td>1</td>
+</tr>
+
+<tr>
+    <th>Low</th>
+    <td>0</td>
+</tr>
+
+</table>
+
+</div>
+
+<h2>Security Findings</h2>
+
+
+            <section class="finding">
+                <h2>Broken Object Level Authorization</h2>
+
+                <table>
+                    <tr>
+                        <th>Finding ID</th>
+                        <td>FINDING-001</td>
+                    </tr>
+
+                    <tr>
+                        <th>Category</th>
+                        <td>BOLA</td>
+                    </tr>
+
+                    <tr>
+                        <th>Severity</th>
+                        <td><strong>
+                            HIGH
+                        </strong></td>
+                    </tr>
+
+                    <tr>
+                        <th>Endpoint</th>
+                        <td>
+                            GET
+                            /identity/api/v2/vehicle/{vehicleId}/location
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>Confirmed</th>
+                        <td>True</td>
+                    </tr>
+                </table>
+
+                <h3>Description</h3>
+                <p>An authenticated user was able to access a vehicle object belonging to another authorization context.</p>
+
+                <h3>Impact</h3>
+                <p>An attacker can access another user&#x27;s vehicle data, including vehicle location and associated user information.</p>
+
+                <h3>Evidence</h3>
+
+                <h4>Victim Request</h4>
+                <pre>{
+  &quot;identity&quot;: &quot;adam007@example.com&quot;,
+  &quot;method&quot;: &quot;GET&quot;,
+  &quot;url&quot;: &quot;http://localhost:8888/identity/api/v2/vehicle/f89b5f21-7829-45cb-a650-299a61090378/location&quot;,
+  &quot;status_code&quot;: 200,
+  &quot;response_body&quot;: &quot;{\&quot;carId\&quot;:\&quot;f89b5f21-7829-45cb-a650-299a61090378\&quot;,\&quot;vehicleLocation\&quot;:{\&quot;id\&quot;:1,\&quot;latitude\&quot;:\&quot;32.778889\&quot;,\&quot;longitude\&quot;:\&quot;-91.919243\&quot;},\&quot;fullName\&quot;:\&quot;Adam\&quot;,\&quot;email\&quot;:\&quot;adam007@example.com\&quot;}&quot;,
+  &quot;response_time_ms&quot;: 2093.448
+}</pre>
+
+                <h4>Cross-User Request</h4>
+                <pre>{
+  &quot;identity&quot;: &quot;test@example.com&quot;,
+  &quot;method&quot;: &quot;GET&quot;,
+  &quot;url&quot;: &quot;http://localhost:8888/identity/api/v2/vehicle/f89b5f21-7829-45cb-a650-299a61090378/location&quot;,
+  &quot;status_code&quot;: 200,
+  &quot;response_body&quot;: &quot;{\&quot;carId\&quot;:\&quot;f89b5f21-7829-45cb-a650-299a61090378\&quot;,\&quot;vehicleLocation\&quot;:{\&quot;id\&quot;:1,\&quot;latitude\&quot;:\&quot;32.778889\&quot;,\&quot;longitude\&quot;:\&quot;-91.919243\&quot;},\&quot;fullName\&quot;:\&quot;Adam\&quot;,\&quot;email\&quot;:\&quot;adam007@example.com\&quot;}&quot;,
+  &quot;response_time_ms&quot;: 2083.886
+}</pre>
+
+                <h3>Remediation</h3>
+                <p>Enforce server-side object-level authorization on the vehicle endpoint. The API must verify that the authenticated user owns or is explicitly authorized to access the requested vehicle before returning its data.</p>
+            </section>
+            
+            <section class="finding">
+                <h2>Authentication Control Not Confirmed Broken</h2>
+
+                <table>
+                    <tr>
+                        <th>Finding ID</th>
+                        <td>FINDING-002</td>
+                    </tr>
+
+                    <tr>
+                        <th>Category</th>
+                        <td>AUTHENTICATION</td>
+                    </tr>
+
+                    <tr>
+                        <th>Severity</th>
+                        <td><strong>
+                            INFO
+                        </strong></td>
+                    </tr>
+
+                    <tr>
+                        <th>Endpoint</th>
+                        <td>
+                            GET
+                            /identity/api/v2/vehicle/{vehicleId}/location
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>Confirmed</th>
+                        <td>False</td>
+                    </tr>
+                </table>
+
+                <h3>Description</h3>
+                <p>The endpoint was tested with and without authentication credentials to determine whether the authentication control is enforced.</p>
+
+                <h3>Impact</h3>
+                <p>If authentication is not enforced, an unauthenticated attacker may access protected API functionality or sensitive resources.</p>
+
+                <h3>Evidence</h3>
+
+                <h4>Victim Request</h4>
+                <pre>{}</pre>
+
+                <h4>Cross-User Request</h4>
+                <pre>{}</pre>
+
+                <h3>Remediation</h3>
+                <p>Enforce server-side authentication on endpoints that require authenticated access. Reject requests without valid authentication credentials with an appropriate 401 Unauthorized response.</p>
+            </section>
+            
+            <section class="finding">
+                <h2>Potential Excessive Data Exposure</h2>
+
+                <table>
+                    <tr>
+                        <th>Finding ID</th>
+                        <td>FINDING-003</td>
+                    </tr>
+
+                    <tr>
+                        <th>Category</th>
+                        <td>INFORMATION_DISCLOSURE</td>
+                    </tr>
+
+                    <tr>
+                        <th>Severity</th>
+                        <td><strong>
+                            MEDIUM
+                        </strong></td>
+                    </tr>
+
+                    <tr>
+                        <th>Endpoint</th>
+                        <td>
+                            GET
+                            /identity/api/v2/vehicle/{vehicleId}/location
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>Confirmed</th>
+                        <td>False</td>
+                    </tr>
+                </table>
+
+                <h3>Description</h3>
+                <p>The endpoint response was inspected for potentially sensitive fields that may exceed the minimum data required by the API operation.</p>
+
+                <h3>Impact</h3>
+                <p>Unnecessary exposure of user information may increase privacy and data-disclosure risk if the returned fields are not required by the business function.</p>
+
+                <h3>Evidence</h3>
+
+                <h4>Victim Request</h4>
+                <pre>{}</pre>
+
+                <h4>Cross-User Request</h4>
+                <pre>{}</pre>
+
+                <h3>Remediation</h3>
+                <p>Return only the data required by the API operation. Review whether exposed user fields such as fullName and email are necessary and remove unnecessary personally identifiable information.</p>
+            </section>
+            
+            <section class="finding">
+                <h2>No Effective Rate Limiting Observed</h2>
+
+                <table>
+                    <tr>
+                        <th>Finding ID</th>
+                        <td>FINDING-004</td>
+                    </tr>
+
+                    <tr>
+                        <th>Category</th>
+                        <td>RATE_LIMITING</td>
+                    </tr>
+
+                    <tr>
+                        <th>Severity</th>
+                        <td><strong>
+                            MEDIUM
+                        </strong></td>
+                    </tr>
+
+                    <tr>
+                        <th>Endpoint</th>
+                        <td>
+                            GET
+                            /identity/api/v2/user/dashboard
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>Confirmed</th>
+                        <td>True</td>
+                    </tr>
+                </table>
+
+                <h3>Description</h3>
+                <p>The authenticated endpoint accepted repeated requests without returning HTTP 429 throttling responses during the assessment.</p>
+
+                <h3>Impact</h3>
+                <p>Insufficient request throttling may allow an attacker to consume excessive application resources or repeatedly invoke an API operation without an effective server-side request limit.</p>
+
+                <h3>Evidence</h3>
+
+                <h4>Victim Request</h4>
+                <pre>{}</pre>
+
+                <h4>Cross-User Request</h4>
+                <pre>{}</pre>
+
+                <h3>Remediation</h3>
+                <p>Implement server-side rate limiting appropriate to the endpoint and threat model. Apply limits using authenticated identity and, where appropriate, IP address and endpoint-specific controls. Return HTTP 429 when the configured threshold is exceeded.</p>
+            </section>
+            
+
+</div>
+
+</body>
+</html>
